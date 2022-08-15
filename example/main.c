@@ -8,11 +8,17 @@ int divide(int a, int b);
 void doSomething(void *pData);
 void runProgram(bool raiseDivideByZero, bool raiseArgumentNull);
 
+// Reserved identifiers in the global namespace
+// _g_tryCatchEnvs (variable)
+
 int main(void)
 {
+    // To catch unhandled exceptions, you can write what's known as a "big outer try block" in your main method,
+    // with a catchAll block that will catch all thrown exceptions.
     runProgram(false, true);
     system("pause");
     runProgram(false, false);
+    
     return EXIT_SUCCESS;
 }
 
@@ -22,35 +28,53 @@ void runProgram(bool raiseDivideByZero, bool raiseArgumentNull)
     int divisor = raiseDivideByZero ? 0 : 3;
     void *pData = raiseArgumentNull ? NULL : &divisor;
 
-    /* Identifiers reserved by the try/catch/finally structure in the function scope
-     * _handled (variable)
-     * _tryCatchEnv (variable)
-     * _finally (goto label) */
+    // Identifiers reserved by the try/catch/finally structure in the function scope
+    // _handled (variable)
+    // _tryCatchEnv (variable)
+    // _finally (goto label)
     try
     {
-        // rethrow; // causes assertion failure because not exception has been thrown (yet)
+        // rethrow; // causes assertion failure because no exception has been thrown (yet)
         int result = divide(6, divisor);
         printf("Result is %d\n", result);
         doSomething(pData);
         printf("Done something with data successfully.\n");
     }
+    // Argument 1 is the ID of the exception that will be catched
+    // Argument 2 is the name of the variable to create (of type Exception const*) local to the scope of the catch block.
     catch(EID_DIVIDE_BY_ZERO, e)
     {
         printf("In catch block for EID_DIVIDE_BY_ZERO.\n");
         printf("Rethrowing exeption...");
+        
+        // Rrethrow the exception and let it bubble up.
+        // The equivalent C# syntax would be
+        // throw;
         rethrow;
     }
+    // The equivalent C# syntax would be
+    // catch(ArgumentNullException e)
     catch(EID_ARGUMENT_NULL, e)
     {
         printf("In catch block for EID_ARGUMENT_NULL.\n");
-        fprintf(stderr, "An exception occurred\nMessage: %s\nID: %d\n", getThrownException()->message, getThrownException()->id);
+        fprintf(stderr, "An exception occurred\nMessage: %s\nID: %d\n", e->message, e->id);
         printf("Exception discarded.\n");
     }
+    // Catches all exceptions, regardless of their ID.
+    // The equivalent C# syntax would be
+    // catch(Exception e)
+    catchAll(e)
+    {
+        rethrow;
+    }
+    // The finally block will always be executed, regardless if an exception occured or not.
+    // It is mandatory, even if it's empty. If you forget to include it, you will get a compilation error for a missing goto label.
     finally
     {
         printf("In finally block.\n");
     }
-
+    
+    // This line will only be executed if no exception occured.
     printf("Some additional logic after the try-catch-finally construct that should not be executed if an exception occured...\n");
 }
 
@@ -58,6 +82,13 @@ int divide(int a, int b)
 {
     if (b == 0)
     {
+        // Here an exception is thrown if b equals 0 because dividing by 0 is not a valid operation.
+        // In C, dividing by zero is undefined behaviour, and on my Windows machine it crashes the program.
+        // However, by throwing an exception, we can recover from what would otherwise be a critical failure.
+        
+        // The throw macro leaves the method and uses the longjmp() function to jump to the nearest catch block in the stack trace.
+        // If there is no catch block defined, it shows a message and aborts the program since the exception is unhandled.
+        // See the main() function for instructions on how to handle unhandled exceptions.
         throw("Can't divide by zero", EID_DIVIDE_BY_ZERO);
     }
     printf("Dividing %d and %d...\n", a, b);
@@ -67,7 +98,9 @@ void doSomething(void *pData)
 {
     if (pData == NULL)
     {
-        throw("Argument \"data\" is NULL", EID_ARGUMENT_NULL);
+        // The equivalent C# syntax would be
+        // throw new ArgumentNullException(nameof(pData));
+        throw("Argument \"pData\" is NULL", EID_ARGUMENT_NULL);
     }
     printf("Doing something with data at memory address %p...\n", pData);
     // do something with data...
