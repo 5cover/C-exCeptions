@@ -71,10 +71,7 @@ if (_setjmpResult == _JMP_FINALLY_EXECUTED)                                     
         {                                                                                               \
             _abortUnhandledException();                                                                 \
         }                                                                                               \
-        else                                                                                            \
-        {                                                                                               \
-            longjmp(_TOP_TRY_CATCH_ENV, _JMP_EXCEPTION);                                                \
-        }                                                                                               \
+        longjmp(_TOP_TRY_CATCH_ENV, _JMP_EXCEPTION);                                                                                               \
     }                                                                                                   \
     else                                                                                                \
     {                                                                                                   \
