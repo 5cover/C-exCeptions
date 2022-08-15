@@ -22,13 +22,13 @@ void runProgram(bool raiseDivideByZero, bool raiseArgumentNull)
     int divisor = raiseDivideByZero ? 0 : 3;
     void *pData = raiseArgumentNull ? NULL : &divisor;
 
-    /* Identifiers reserved by the try/catch/finally structure
-     * _handled
-     * _tryCatchEnv
-     * _finally */
+    /* Identifiers reserved by the try/catch/finally structure in the function scope
+     * _handled (variable)
+     * _tryCatchEnv (variable)
+     * _finally (goto label) */
     try
     {
-        // rethrow; // causes assertion failure
+        // rethrow; // causes assertion failure because not exception has been thrown (yet)
         int result = divide(6, divisor);
         printf("Result is %d\n", result);
         doSomething(pData);
@@ -51,7 +51,7 @@ void runProgram(bool raiseDivideByZero, bool raiseArgumentNull)
         printf("In finally block.\n");
     }
 
-    printf("\nSome additional logic after the try-catch-finally construct that should not be executed if an exception occured...\n\n");
+    printf("Some additional logic after the try-catch-finally construct that should not be executed if an exception occured...\n");
 }
 
 int divide(int a, int b)
