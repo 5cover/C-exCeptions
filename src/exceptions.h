@@ -49,6 +49,10 @@ Exception const *getThrownException(void);
     assert(!_AN_EXCEPTION_OCCURED                                                                       \
            && "Cannot throw an exception when another is already being handled. Use rethrow instead."); \
     setThrownException(message, id);                                                                    \
+    if(_g_tryCatchEnvs.size == 0)                                                                       \ 
+    {                                                                                                   \
+        _abortUnhandledException();                                                                     \
+    }                                                                                                   \
     longjmp(_TOP_TRY_CATCH_ENV, _JMP_EXCEPTION);                                                        \
 }                                                                                                       \
 while(0)
