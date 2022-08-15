@@ -1,7 +1,7 @@
 # C-exCeptions
 
 Macros for throwing and handling exceptions in C, in a ``try``/``catch``/``finally``-like fashion.
-I tried my best to reproduce C# exception handling syntax, but it cannot be perfect due to the limitations of macros.
+I tried my best to reproduce the C# exception handling syntax, but it cannot be perfect due to the limitations of macros.
 
 ## How to use
 
