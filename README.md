@@ -1,6 +1,6 @@
 # C-exCeptions
 
-Macros for throwing and handling exceptions in C, in a ``try``/``catch``/``finally``-like fashion.
+Static library containing macros for throwing and handling exceptions in C, in a ``try``/``catch``/``finally``-like fashion, along with a basic implementation of a stack.
 I tried my best to reproduce the C# exception handling syntax, but it cannot be perfect due to the limitations of macros.
 
 ## How to use
