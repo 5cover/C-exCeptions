@@ -32,12 +32,11 @@ typedef struct
     ExceptionID const id;
 } Exception;
 
-void setThrownException(char const *, ExceptionID const);
-void freeThrownException(void);
-void _abortUnhandledException();
-
-
-Exception const *getThrownException(void);
+static Exception *makeException(char const *, ExceptionID const);
+inline void setThrownException(char const *, ExceptionID const);
+inline void freeThrownException(void);
+inline void _abortUnhandledException(void);
+inline Exception const *getThrownException(void);
 
 // Internal macros used to avoid code duplication.
 #define _AN_EXCEPTION_OCCURED (getThrownException() != NULL)
