@@ -8,9 +8,6 @@ int divide(int a, int b);
 void doSomething(void *pData);
 void runProgram(bool raiseDivideByZero, bool raiseArgumentNull);
 
-// Reserved identifiers in the global namespace
-// _g_tryCatchEnvs (variable)
-
 int main(void)
 {
     // To catch unhandled exceptions, you can write what's known as a "big outer try block" in your main method,
@@ -40,14 +37,14 @@ void runProgram(bool raiseDivideByZero, bool raiseArgumentNull)
         doSomething(pData);
         printf("Done something with data successfully.\n");
     }
-    // Argument 1 is the ID of the exception that will be catched
+    // Argument 1 is the ID of the exception to catch
     // Argument 2 is the name of the variable to create (of type Exception const*) local to the scope of the catch block.
     catch(EID_DIVIDE_BY_ZERO, e)
     {
         printf("In catch block for EID_DIVIDE_BY_ZERO.\n");
         printf("Rethrowing exeption...\n");
 
-        // Rrethrow the exception and let it bubble up.
+        // Rethrow the exception and let it bubble up.
         // The equivalent C# syntax would be
         // throw;
         rethrow;
@@ -60,14 +57,14 @@ void runProgram(bool raiseDivideByZero, bool raiseArgumentNull)
         fprintf(stderr, "An exception occurred\nMessage: %s\nID: %d\n", e->message, e->id);
         printf("Exception discarded.\n");
     }
-    // The finally block will always be executed, regardless if an exception occured or not.
+    // The finally block will always be executed, regardless if an exception occurred or not.
     // It is mandatory, even if it's empty. If you forget to include it, you will get a compilation error for a missing goto label.
     finally
     {
         printf("In finally block.\n");
     }
 
-    // This line will only be executed if no exception occured.
+    // This line will only be executed if no exception occurred.
     printf("Some additional logic after the try-catch-finally construct that should not be executed if an exception occured...\n");
 }
 
@@ -76,7 +73,7 @@ int divide(int a, int b)
     if (b == 0)
     {
         // Here an exception is thrown if b equals 0 because dividing by 0 is not a valid operation.
-        // In C, dividing by zero is undefined behaviour, and on my Windows machine it crashes the program.
+        // In C, dividing by zero is undefined behavior, and on my Windows machine it crashes the program.
         // However, by throwing an exception, we can recover from what would otherwise be a critical failure.
 
         // The throw macro leaves the method and uses the longjmp() function to jump to the nearest catch block in the stack trace.

@@ -23,11 +23,13 @@ Exception const *_thrownException(void)
 {
     return sgp_thrownException;
 }
+
 void _freeThrownException(void)
 {
     free(sgp_thrownException);
     sgp_thrownException = NULL;
 }
+
 Exception *makeException(ExceptionID const id, char const *message)
 {
     // Duplicate the string to ensure it's allocated on the heap.

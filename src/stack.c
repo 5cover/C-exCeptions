@@ -25,7 +25,7 @@ void pushStack(Stack *this, void *value)
     StackNode *pNewNode = malloc(sizeof *pNewNode);
     if(pNewNode == NULL)
     {
-        fprintf(stderr, "Stack node heap allocation failed: malloc(%u) returned NULL\n", (unsigned)sizeof(*pNewNode));
+        fprintf(stderr, "Stack node heap allocation failed: malloc(%u) returned NULL\n", (unsigned)sizeof *pNewNode);
         abort();
     }
 
