@@ -14,3 +14,18 @@
 
 1660470475 d:\scover\bureau\programmation\c\c-exceptions\src\stack.h
 
+1660650389 source:c:\users\raphaël\documents\github\c-exceptions\example\main.c
+	<stdlib.h>
+	<stdio.h>
+	<stdbool.h>
+	"..\src\exceptions.h"
+
+1660652065 c:\users\raphaël\documents\github\c-exceptions\src\exceptions.h
+	<stdlib.h>
+	<assert.h>
+	<setjmp.h>
+	<stdbool.h>
+	"stack.h"
+
+1660633585 c:\users\raphaël\documents\github\c-exceptions\src\stack.h
+

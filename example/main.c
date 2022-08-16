@@ -15,10 +15,10 @@ int main(void)
 {
     // To catch unhandled exceptions, you can write what's known as a "big outer try block" in your main method,
     // with a catchAll block that will catch all thrown exceptions.
-    runProgram(false, true);
+    runProgram(true, false);
     system("pause");
     runProgram(false, false);
-    
+
     return EXIT_SUCCESS;
 }
 
@@ -45,8 +45,8 @@ void runProgram(bool raiseDivideByZero, bool raiseArgumentNull)
     catch(EID_DIVIDE_BY_ZERO, e)
     {
         printf("In catch block for EID_DIVIDE_BY_ZERO.\n");
-        printf("Rethrowing exeption...");
-        
+        printf("Rethrowing exeption...\n");
+
         // Rrethrow the exception and let it bubble up.
         // The equivalent C# syntax would be
         // throw;
@@ -60,20 +60,13 @@ void runProgram(bool raiseDivideByZero, bool raiseArgumentNull)
         fprintf(stderr, "An exception occurred\nMessage: %s\nID: %d\n", e->message, e->id);
         printf("Exception discarded.\n");
     }
-    // Catches all exceptions, regardless of their ID.
-    // The equivalent C# syntax would be
-    // catch(Exception e)
-    catchAll(e)
-    {
-        rethrow;
-    }
     // The finally block will always be executed, regardless if an exception occured or not.
     // It is mandatory, even if it's empty. If you forget to include it, you will get a compilation error for a missing goto label.
     finally
     {
         printf("In finally block.\n");
     }
-    
+
     // This line will only be executed if no exception occured.
     printf("Some additional logic after the try-catch-finally construct that should not be executed if an exception occured...\n");
 }
@@ -85,11 +78,11 @@ int divide(int a, int b)
         // Here an exception is thrown if b equals 0 because dividing by 0 is not a valid operation.
         // In C, dividing by zero is undefined behaviour, and on my Windows machine it crashes the program.
         // However, by throwing an exception, we can recover from what would otherwise be a critical failure.
-        
+
         // The throw macro leaves the method and uses the longjmp() function to jump to the nearest catch block in the stack trace.
         // If there is no catch block defined, it shows a message and aborts the program since the exception is unhandled.
         // See the main() function for instructions on how to handle unhandled exceptions.
-        throw("Can't divide by zero", EID_DIVIDE_BY_ZERO);
+        throw(EID_DIVIDE_BY_ZERO, "Can't divide by zero");
     }
     printf("Dividing %d and %d...\n", a, b);
     return a/b;
@@ -100,7 +93,7 @@ void doSomething(void *pData)
     {
         // The equivalent C# syntax would be
         // throw new ArgumentNullException(nameof(pData));
-        throw("Argument \"pData\" is NULL", EID_ARGUMENT_NULL);
+        throw(EID_ARGUMENT_NULL, "Argument \"pData\" is NULL");
     }
     printf("Doing something with data at memory address %p...\n", pData);
     // do something with data...

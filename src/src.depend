@@ -1,0 +1,22 @@
+# depslib dependency file v1.0
+1660652043 source:c:\users\raphaël\documents\github\c-exceptions\src\exceptions.c
+	<stdio.h>
+	<string.h>
+	<assert.h>
+	"exceptions.h"
+
+1660652065 c:\users\raphaël\documents\github\c-exceptions\src\exceptions.h
+	<stdlib.h>
+	<assert.h>
+	<setjmp.h>
+	<stdbool.h>
+	"stack.h"
+
+1660633585 c:\users\raphaël\documents\github\c-exceptions\src\stack.h
+
+1660633585 source:c:\users\raphaël\documents\github\c-exceptions\src\stack.c
+	<stdlib.h>
+	<stdio.h>
+	"stack.h"
+	"assert.h"
+

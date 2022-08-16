@@ -10,9 +10,25 @@
 
 Stack _g_tryCatchEnvs = EMPTY_STACK_INITIALIZER;
 
-static Exception *g_pThrownException = NULL;
+static Exception *sgp_thrownException = NULL;
 
-static Exception *makeException(char const *message, ExceptionID const id)
+static Exception *makeException(ExceptionID const id, char const *message);
+
+void _setThrownException(ExceptionID const id, char const *message)
+{
+    sgp_thrownException = makeException(id, message);
+}
+
+Exception const *_thrownException(void)
+{
+    return sgp_thrownException;
+}
+void _freeThrownException(void)
+{
+    free(sgp_thrownException);
+    sgp_thrownException = NULL;
+}
+Exception *makeException(ExceptionID const id, char const *message)
 {
     // Duplicate the string to ensure it's allocated on the heap.
     char const *HEAP_MESSAGE = strdup(message);
@@ -43,29 +59,4 @@ static Exception *makeException(char const *message, ExceptionID const id)
     // Return the heap-allocated exception and automatically discard init.
     return pNew;
 
-}
-
-inline void setThrownException(char const *message, ExceptionID const id)
-{
-    // make sure its freed. freeThrownException() nullifies the pointer so it's safe to call it multiple times.
-    freeThrownException();
-    g_pThrownException = makeException(message, id);
-}
-
-inline void freeThrownException(void)
-{
-    free(g_pThrownException);
-    g_pThrownException = NULL;
-}
-
-inline Exception const *getThrownException(void)
-{
-    return g_pThrownException;
-}
-
-inline void _abortUnhandledException(void)
-{
-    assert(g_pThrownException != NULL && "Attempted to abort for an unhandled exception, but there's not exception");
-    fprintf(stderr, "\nUnhandled exception!\nMessage: %s\nID: %d\nAborting application...\n", g_pThrownException->message, g_pThrownException->id);
-    abort();
 }
