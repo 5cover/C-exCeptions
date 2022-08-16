@@ -1,14 +1,15 @@
-# C-exCeption
+# C-exCeptions
 
 Static library containing macros for throwing and handling exceptions in C, in a ``try``/``catch``/``finally``-like fashion, along with a basic implementation of a stack.
 I tried my best to reproduce the C# exception handling syntax, but it cannot be perfect due to the limitations of macros.
 
 ## How to use
 
-See the [example](https://github.com/5cover/C-exCeptions/blob/main/example/main.c).
+See the comments in [example](https://github.com/5cover/C-exCeptions/blob/main/example/main.c).
 
 ## Reserved identifiers
-> **Warning** The reserved identifiers are implementation-defined. Client code should not use them.
+Reserved identifiers used in macros. 
+> **Warning** The reserved identifiers may change at any time. Client code should not use or rely on them. Manually calling a function or modifying a variable of this list results to undefined behavior and is not supported.
 
 Name | Type | Scope | Defined in
 | - | - | - | -
