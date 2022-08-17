@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1660652043 source:c:\users\raphaël\documents\github\c-exceptions\src\exceptions.c
+1660670716 source:c:\users\raphaël\documents\github\c-exceptions\src\exceptions.c
 	<stdio.h>
 	<string.h>
 	<assert.h>
@@ -14,7 +14,7 @@
 
 1660633585 c:\users\raphaël\documents\github\c-exceptions\src\stack.h
 
-1660633585 source:c:\users\raphaël\documents\github\c-exceptions\src\stack.c
+1660670605 source:c:\users\raphaël\documents\github\c-exceptions\src\stack.c
 	<stdlib.h>
 	<stdio.h>
 	"stack.h"

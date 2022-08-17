@@ -1,10 +1,11 @@
 # depslib dependency file v1.0
-1660673450 source:c:\users\raphaël\documents\github\c-exceptions\tests\main.c
+1660727377 source:c:\users\raphaël\documents\github\c-exceptions\tests\main.c
 	"main.h"
 
-1660673567 c:\users\raphaël\documents\github\c-exceptions\tests\main.h
+1660728315 c:\users\raphaël\documents\github\c-exceptions\tests\main.h
 	<assert.h>
 	<stdio.h>
+	<stdbool.h>
 	"..\src\exceptions.h"
 
 1660652065 c:\users\raphaël\documents\github\c-exceptions\src\exceptions.h

@@ -3,6 +3,7 @@
 
 #include <assert.h>
 #include <stdio.h>
+#include <stdbool.h>
 #include "..\src\exceptions.h"
 
 #define EID_TEST 99
@@ -15,16 +16,20 @@ typedef struct
     int catchAllC;
     int finallyC;
     int afterC;
-} Test;
+    int rethrowC;
+} TestResult;
+
+typedef void (*t_TestProc)(void);
+typedef TestResult (*t_TestFunction)(t_TestProc);
 
 static inline void failThrow(void)
 {
-    assert(false && "Throw macro did not leave method.");
+    assert(!"Throw macro did not leave method.");
 }
 
-static inline Test catches(void (*function)(void))
+static inline TestResult catches(t_TestProc function)
 {
-    Test t = {0};
+    TestResult t = {0};
 
     try
     {
@@ -43,13 +48,15 @@ static inline Test catches(void (*function)(void))
     {
         ++t.finallyC;
     }
+
     ++t.afterC;
+
     return t;
 }
 
-static inline Test doesntCatch(void (*function)(void))
+static inline TestResult doesntCatch(t_TestProc function)
 {
-    Test t = {0};
+    TestResult t = {0};
 
     try
     {
@@ -60,21 +67,75 @@ static inline Test doesntCatch(void (*function)(void))
     {
         ++t.finallyC;
     }
+
     ++t.afterC;
+
+    return t;
+}
+
+static inline TestResult rethrows(t_TestProc function)
+{
+    TestResult t = {0};
+
+    try
+    {
+        ++t.tryC;
+        function();
+    }
+    catch(EID_TEST, e)
+    {
+        ++t.catchC;
+        ++t.rethrowC;
+        rethrow;
+    }
+    catchAll(e)
+    {
+        ++t.catchAllC;
+        ++t.rethrowC;
+        rethrow;
+    }
+    finally
+    {
+        ++t.finallyC;
+    }
+
+    ++t.afterC;
+
     return t;
 }
 
 #define assertEquals(a, b) if (a != b) printf("%d != %d\n", a, b); assert(a == b)
 
-#define test(testFunction,function, expected_tryC, expected_catchC, expected_catchAllC, expected_finallyC, expected_afterC) \
-{                                                                      \
-    printf("Testing \"%s\" with function \"%s\"...\n", #function, #testFunction); \
-    Test t = (&testFunction)(&function);                                 \
-    assertEquals(t.tryC, expected_tryC);                               \
-    assertEquals(t.catchC, expected_catchC);                           \
-    assertEquals(t.catchAllC, expected_catchAllC);                     \
-    assertEquals(t.finallyC, expected_finallyC);                       \
-    assertEquals(t.afterC, expected_afterC);                           \
+#define test(testFunctionName, shouldRethrow, functionName, expected_tryC, expected_catchC, expected_catchAllC, expected_finallyC, expected_afterC, expected_rethrowC) \
+do                                                                                                                                 \
+{                                                                                                                                  \
+    printf("%s test that %s...\n", #functionName, #testFunctionName);                                          \
+    TestResult expected = { expected_tryC, expected_catchC, expected_catchAllC, expected_finallyC, expected_afterC, expected_rethrowC }; \
+    _test(&testFunctionName, shouldRethrow, &functionName, expected);                                                                             \
+}                                                                                                                                  \
+while(0)
+
+static inline void _test(t_TestFunction testFunction, bool shouldRethrow, t_TestProc function, TestResult expected)
+{
+    TestResult t = expected;
+    try
+    {
+        t = testFunction(function);
+        assert(!shouldRethrow);
+    }
+    catchAll(e)
+    {
+        assert(shouldRethrow);
+    }
+    finally
+    {
+        assertEquals(t.tryC, expected.tryC);
+        assertEquals(t.catchC, expected.catchC);
+        assertEquals(t.catchAllC, expected.catchAllC);
+        assertEquals(t.finallyC, expected.finallyC);
+        assertEquals(t.afterC, expected.afterC);
+        assertEquals(t.rethrowC, expected.rethrowC);
+    }
 }
 
 #endif // MAIN_H_INCLUDED

@@ -26,17 +26,21 @@ void noThrow(void)
 
 int main(void)
 {
-    test(catches, basic, 1,1,0,1,1);
-    //test(&doesntCatch, &basic, 1,0,0,1,0); // unhandled exception
+    test(catches,     false, basic, 1,1,0,1,1,0);
+    test(doesntCatch, true,  basic, 1,0,0,1,0,0);
+    test(rethrows,    true,  basic, 1,1,0,1,0,1);
 
-    test(catches, uncatchable, 1,0,1,1,1);
-    //test(&doesntCatch, &uncatchable, 1,0,0,1,0); // unhandled exception
+    test(catches,     false, uncatchable, 1,0,1,1,1,0);
+    test(doesntCatch, true,  uncatchable, 1,0,0,1,0,0);
+    test(rethrows,    true,  uncatchable, 1,0,1,1,0,1);
 
-    test(catches, multipleThrows, 1,1,0,1,1);
-    //test(&doesntCatch, &multipleThrows, 1,0,0,1,0); // unhandled exception
+    test(catches,     false, multipleThrows, 1,1,0,1,1,0);
+    test(doesntCatch, true,  multipleThrows, 1,0,0,1,0,0);
+    test(rethrows,    true,  multipleThrows, 1,1,0,1,0,1);
 
-    test(catches, noThrow, 1,0,0,1,1);
-    test(doesntCatch, noThrow, 1,0,0,1,1);
+    test(catches,     false, noThrow, 1,0,0,1,1,0);
+    test(doesntCatch, false, noThrow, 1,0,0,1,1,0);
+    test(rethrows,    false, noThrow, 1,0,0,1,1,0);
 
     printf("Tests completed");
     return 0;
