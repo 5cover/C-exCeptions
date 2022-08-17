@@ -36,14 +36,14 @@ Exception *makeException(ExceptionID const id, char const *message)
     char const *HEAP_MESSAGE = strdup(message);
     if (HEAP_MESSAGE == NULL)
     {
-        fprintf(stderr, "\nString duplication failed: strdup(\"%s\") returned NULL\n", message);
+        fprintf(stderr, "\nString duplication failed: strdup(\"%s\") returned NULL\nAborting program...\n", message);
         abort();
     }
 
     Exception *pNew = malloc(sizeof *pNew);
     if (pNew == NULL)
     {
-        fprintf(stderr, "\nException heap allocation failed: malloc(%u) returned NULL\n", (unsigned)sizeof *pNew);
+        fprintf(stderr, "\nException heap allocation failed: malloc(%u) returned NULL\nAborting program...\n", (unsigned)sizeof *pNew);
         abort();
     }
 
@@ -61,4 +61,12 @@ Exception *makeException(ExceptionID const id, char const *message)
     // Return the heap-allocated exception and automatically discard init.
     return pNew;
 
+}
+
+void _abortUnhandledException(void)
+{
+    assert(_thrownException() != NULL && "Attempted to abort for an unhandled exception, but no exception occurred.");
+    fprintf(stderr, "\nUnhandled exception!\nMessage: %s\nID: %d\n", _thrownException()->message, _thrownException()->id);
+
+    abort();
 }

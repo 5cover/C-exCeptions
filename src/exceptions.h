@@ -29,13 +29,7 @@ typedef struct
 void _setThrownException(ExceptionID const, char const *);
 void _freeThrownException(void);
 Exception const *_thrownException(void);
-
-static inline void _abortUnhandledException(void)
-{
-    assert(_thrownException() != NULL && "Attempted to abort for an unhandled exception, but no exception occurred.");
-    fprintf(stderr, "\nUnhandled exception!\nMessage: %s\nID: %d\nAborting application...\n", _thrownException()->message, _thrownException()->id);
-    abort();
-}
+void _abortUnhandledException(void);
 
 // Used to throw an exception that will bubble up the stack.
 #define throw(id, message) do                                                                                    \
