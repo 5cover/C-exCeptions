@@ -13,11 +13,39 @@
 
 extern Stack _g_tryCatchEnvs;
 
+// Common exception IDs with their C# counterpart. Don't hesitate to define your own.
 typedef enum
 {
-    EID_DIVIDE_BY_ZERO = 1,
+    // ArgumentException
+    EID_ARGUMENT = 1,
+    // ArgumentNullException
     EID_ARGUMENT_NULL,
-    EID_INVALID_ARGUMENT
+    // ArgumentOutOfRangeException
+    EID_ARGUMENT_OUT_OF_RANGE,
+    // DivideByZeroException
+    EID_DIVIDE_BY_ZERO,
+    // FormatException
+    EID_FORMAT,
+    // IndexOutOfRangeException
+    EID_INDEX_OUT_OF_RANGE,
+    // InsufficientMemoryException
+    EID_INSUFFICIENT_MEMORY,
+    // InvalidOperationException
+    EID_INVALID_OPERATION,
+    // IOException
+    EID_IO_EXCEPTION,
+    // NotImplementedException
+    EID_NOT_IMPLEMENTED,
+    // NotSupportedException
+    EID_NOT_SUPPORTED,
+    // NullReferenceException
+    EID_NULL_POINTER,
+    // OperationCanceledException
+    EID_OPERATION_CANCELED,
+    // RankException
+    EID_RANK,
+    
+    
 } ExceptionID;
 
 typedef struct
