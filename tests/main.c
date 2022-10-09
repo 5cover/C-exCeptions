@@ -4,6 +4,8 @@
 #define THROW_TEST() throw(EID_TEST, "test exception"); failThrow()
 #define THROW_UNCATCHABLE() throw(420, "catch me if you can"); failThrow()
 
+static bool sg_autoTestsCompleted = false;
+
 void basic(void)
 {
     THROW_TEST();
@@ -27,9 +29,9 @@ void noThrow(void)
 
 void signalHandler(int sigId)
 {
-    if(sigId == SIGABRT)
+    if(sigId == SIGABRT && sg_autoTestsCompleted)
     {
-        printf("Is this correct? (y/n) ");
+        printf("\nIs this correct? (y/n) ");
         char input = '\0';
         while(input != 'n' && input != 'y')
         {
@@ -65,6 +67,8 @@ int main(void)
     test(catches,     false, noThrow, 1,0,0,1,1,0);
     test(doesntCatch, false, noThrow, 1,0,0,1,1,0);
     test(rethrows,    false, noThrow, 1,0,0,1,1,0);
+
+    sg_autoTestsCompleted = true;
 
     printf("\nAutomatic tests completed. Running unhandled exception test...\n");
 

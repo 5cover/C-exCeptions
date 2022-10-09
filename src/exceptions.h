@@ -44,8 +44,6 @@ typedef enum
     EID_OPERATION_CANCELED,
     // RankException
     EID_RANK,
-    
-    
 } ExceptionID;
 
 typedef struct
