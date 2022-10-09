@@ -6,9 +6,9 @@
 #include <stdbool.h>
 #include "..\src\exceptions.h"
 
-#define EID_TEST 99
+#define EID_TEST 999
 
-// A test. Each member corresponds to the number of times the specified structure was executed..
+// A test result. Each member corresponds to the number of times the specified structure was executed.
 typedef struct
 {
     int tryC;
@@ -106,13 +106,13 @@ static inline TestResult rethrows(t_TestProc function)
 
 #define assertEquals(a, b) if (a != b) printf("%d != %d\n", a, b); assert(a == b)
 
-#define test(testFunctionName, shouldRethrow, functionName, expected_tryC, expected_catchC, expected_catchAllC, expected_finallyC, expected_afterC, expected_rethrowC) \
-do                                                                                                                                 \
-{                                                                                                                                  \
-    printf("%s test that %s...\n", #functionName, #testFunctionName);                                          \
-    TestResult expected = { expected_tryC, expected_catchC, expected_catchAllC, expected_finallyC, expected_afterC, expected_rethrowC }; \
-    _test(&testFunctionName, shouldRethrow, &functionName, expected);                                                                             \
-}                                                                                                                                  \
+#define test(testFunctionName, shouldRethrow, functionName, expected_tryC, expected_catchC, expected_catchAllC, expected_finallyC, expected_afterC, expected_rethrowC)\
+do                                                                                                                                                                    \
+{                                                                                                                                                                     \
+    printf("%s test that %s...\n", #functionName, #testFunctionName);                                                                                                 \
+    TestResult expected = { expected_tryC, expected_catchC, expected_catchAllC, expected_finallyC, expected_afterC, expected_rethrowC };                              \
+    _test(&testFunctionName, shouldRethrow, &functionName, expected);                                                                                                 \
+}                                                                                                                                                                     \
 while(0)
 
 static inline void _test(t_TestFunction testFunction, bool shouldRethrow, t_TestProc function, TestResult expected)
