@@ -13,7 +13,6 @@ typedef struct
     // Current size of the stack.
     int size;
     void *_first;
-
 } Stack;
 
 // Add an element at the top of the stack.
