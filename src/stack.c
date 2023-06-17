@@ -8,8 +8,8 @@
 #include "stack.h"
 #include "assert.h"
 
-#define ASSERT_THIS_NOT_NULL(funcName) assert(this != NULL && "The stack argument for" && #funcName && "is NULL")
-#define ASSERT_THIS_NOT_EMPTY(funcName) assert(this->size > 0 && "The stack argument for" && #funcName && "is an empty stack")
+#define ASSERT_THIS_NOT_NULL(funcName) assert(this != NULL && "The stack argument for " #funcName " is NULL")
+#define ASSERT_THIS_NOT_EMPTY(funcName) assert(this->size > 0 && "The stack argument for " #funcName " is an empty stack")
 
 typedef struct StackNode StackNode;
 struct StackNode

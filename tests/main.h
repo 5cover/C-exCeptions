@@ -104,12 +104,12 @@ static inline TestResult rethrows(t_TestProc function)
     return t;
 }
 
-#define assertEquals(a, b) if (a != b) printf("%d != %d\n", a, b); assert(a == b)
+#define assertEquals(a, b) do { if (a != b) printf("%d != %d\n", a, b); assert(a == b); } while(0)
 
 #define test(testFunctionName, shouldRethrow, functionName, expected_tryC, expected_catchC, expected_catchAllC, expected_finallyC, expected_afterC, expected_rethrowC)\
 do                                                                                                                                                                    \
 {                                                                                                                                                                     \
-    printf("%s test that %s...\n", #functionName, #testFunctionName);                                                                                                 \
+    printf(#functionName " test that " #testFunctionName "...\n");                                                                                                 \
     TestResult expected = { expected_tryC, expected_catchC, expected_catchAllC, expected_finallyC, expected_afterC, expected_rethrowC };                              \
     _test(&testFunctionName, shouldRethrow, &functionName, expected);                                                                                                 \
 }                                                                                                                                                                     \

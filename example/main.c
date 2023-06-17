@@ -12,9 +12,9 @@ int main(void)
 {
     // To catch unhandled exceptions, you can write what's known as a "big outer try block" in your main method,
     // with a catchAll block that will catch all thrown exceptions.
-    runProgram(true, false);
-    system("pause");
     runProgram(false, false);
+    system("pause");
+    runProgram(true, false);
 
     return EXIT_SUCCESS;
 }
@@ -25,10 +25,6 @@ void runProgram(bool raiseDivideByZero, bool raiseArgumentNull)
     int divisor = raiseDivideByZero ? 0 : 3;
     void *pData = raiseArgumentNull ? NULL : &divisor;
 
-    // Identifiers reserved by the try/catch/finally structure in the function scope
-    // _handled (variable)
-    // _tryCatchEnv (variable)
-    // _finally (goto label)
     try
     {
         // rethrow; // causes assertion failure because no exception has been thrown (yet)
@@ -55,7 +51,7 @@ void runProgram(bool raiseDivideByZero, bool raiseArgumentNull)
     {
         printf("In catch block for EID_ARGUMENT_NULL.\n");
         fprintf(stderr, "An exception occurred\nMessage: %s\nID: %d\n", e->message, e->id);
-        printf("Exception discarded.\n");
+        printf("Exception swallowed.\n");
     }
     // The finally block will always be executed, regardless if an exception occurred or not.
     // It is mandatory, even if it's empty. If you forget to include it, you will get a compilation error for a missing goto label.
@@ -90,7 +86,7 @@ void doSomething(void *pData)
     {
         // The equivalent C# syntax would be
         // throw new ArgumentNullException(nameof(pData));
-        throw(EID_ARGUMENT_NULL, "Argument \"pData\" is NULL");
+        throw(EID_ARGUMENT_NULL, "Argument \"pData\" was NULL");
     }
     printf("Doing something with data at memory address %p...\n", pData);
     // do something with data...
