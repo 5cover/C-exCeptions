@@ -52,8 +52,8 @@ void _ex_freeThrownException(void)
     {
         free((void*)sgp_thrownException->message);
         free(sgp_thrownException);
+        sgp_thrownException = NULL;
     }
-    sgp_thrownException = NULL;
 }
 
 static Exception *makeException(ExceptionID const id, char const *message)
@@ -91,7 +91,34 @@ static Exception *makeException(ExceptionID const id, char const *message)
 
 void _ex_abortDueToUnhandledException(void)
 {
-    assert(_ex_thrownException() != NULL && "Attempted to abort for an unhandled exception, but no exception occurred.");
-    fprintf(stderr, "\nUnhandled exception!\nMessage: %s\nID: %d\n", _ex_thrownException()->message, _ex_thrownException()->id);
+    assert(sgp_thrownException != NULL && "Attempted to abort for an unhandled exception, but no exception occurred.");
+    fprintf(stderr, "\nUnhandled exception!\nMessage: %s\nID: %d\n", sgp_thrownException->message, sgp_thrownException->id);
     abort();
+}
+
+void _ex_cleanup(bool *alreadyCleanedUp, bool isHandled)
+{
+    if (!*alreadyCleanedUp && sgp_thrownException != NULL)
+    {
+        *alreadyCleanedUp = true;
+        if (isHandled)
+        {
+            _ex_freeThrownException();
+
+        }
+        else
+        {
+            _ex_bubbleUp();
+        }
+
+    }
+}
+
+void _ex_bubbleUp()
+{
+    if (_ex_noTryCatchEnvsDefined())
+    {
+        _ex_abortDueToUnhandledException();
+    }
+    longjmp(*_ex_peekTryCatchEnvs(), 1);
 }

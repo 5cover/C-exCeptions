@@ -12,7 +12,7 @@ int main(void)
 {
     // To catch unhandled exceptions, you can write what's known as a "big outer try block" in your main method,
     // with a catchAll block that will catch all thrown exceptions.
-    runProgram(false, false);
+    runProgram(false, true);
     system("pause");
     runProgram(true, false);
 
@@ -54,7 +54,7 @@ void runProgram(bool raiseDivideByZero, bool raiseArgumentNull)
         printf("Exception swallowed.\n");
     }
     // The finally block will always be executed, regardless if an exception occurred or not.
-    // It is mandatory, even if it's empty. If you forget to include it, you will get a compilation error for a missing goto label.
+    // It is optional.
     finally
     {
         printf("In finally block.\n");
