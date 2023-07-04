@@ -50,7 +50,7 @@ void _ex_freeThrownException(void)
 {
     if (sgp_thrownException != NULL)
     {
-        free((void*)sgp_thrownException->message);
+        free((void*)sgp_thrownException->message); // Cast required: message is a const pointer
         free(sgp_thrownException);
         sgp_thrownException = NULL;
     }
@@ -69,7 +69,7 @@ static Exception *makeException(ExceptionID const id, char const *message)
     Exception *pNew = malloc(sizeof *pNew);
     if (pNew == NULL)
     {
-        fprintf(stderr, "\nException heap allocation failed: malloc(%u) returned NULL\nAborting program...\n", (unsigned)sizeof *pNew);
+        fprintf(stderr, "\nException heap allocation failed: malloc(%zu) returned NULL\nAborting program...\n", sizeof *pNew);
         abort();
     }
 
@@ -81,6 +81,7 @@ static Exception *makeException(ExceptionID const id, char const *message)
         .message = HEAP_MESSAGE,
         .id = id
     };
+
     // Copy the binary data to the heap-allocated exception.
     memcpy(pNew, &init, sizeof *pNew);
 
@@ -110,7 +111,6 @@ void _ex_cleanup(bool *alreadyCleanedUp, bool isHandled)
         {
             _ex_bubbleUp();
         }
-
     }
 }
 

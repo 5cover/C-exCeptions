@@ -17,6 +17,7 @@
 					<Add option="-pedantic" />
 					<Add option="-Wextra" />
 					<Add option="-Wall" />
+					<Add option="-std=c17" />
 					<Add option="-g" />
 				</Compiler>
 			</Target>
@@ -27,6 +28,7 @@
 				<Option type="2" />
 				<Option compiler="gcc" />
 				<Option createDefFile="1" />
+				<Option projectCompilerOptionsRelation="0" />
 				<Compiler>
 					<Add option="-O2" />
 					<Add option="-pedantic" />

@@ -16,7 +16,7 @@
 #define unused
 #endif
 
-// Common exception IDs with their C# counterpart. Don't hesitate to define your own.
+// Common exception IDs with their C# counterpart.
 typedef enum
 {
     // ArgumentException
@@ -51,7 +51,7 @@ typedef enum
 
 typedef struct
 {
-    char const *message;
+    char const *const message;
     ExceptionID const id;
 } Exception;
 
@@ -78,12 +78,9 @@ while(0)
 
 // Try something and execute catch blocks if an exception is thrown.
 #define try                                                                                           \
-int _ex_setjmpResult;                                                                                 \
-{                                                                                                     \
-    jmp_buf env;                                                                                      \
-    _ex_pushTryCatchEnvs(&env);                                                                       \
-    _ex_setjmpResult = setjmp(env);                                                                   \
-}                                                                                                     \
+jmp_buf _ex_env;                                                                                      \
+_ex_pushTryCatchEnvs(&_ex_env);                                                                       \
+int const _ex_setjmpResult = setjmp(_ex_env);                                                         \
 bool _ex_handled = false, _ex_cleanedUp = false;                                                      \
 if (_ex_setjmpResult == 1)                                                                            \
 {                                                                                                     \
@@ -93,25 +90,25 @@ for (bool _ex_tryExecuted = false; _ex_setjmpResult == 0 && !_ex_tryExecuted; _e
 
 // Catches an exception that has the specified ID in a local variable with the scope of the catch block.
 #define catch(targetId, varName)                                                                      \
-for (Exception const unused *varName = _ex_thrownException();                                         \
+for (Exception const unused *const varName = _ex_thrownException();                                   \
      !_ex_handled && _ex_thrownException() != NULL && varName->id == targetId;                        \
-     _ex_handled = true, _ex_cleanup(&_ex_cleanedUp, _ex_handled))
+     _ex_cleanup(&_ex_cleanedUp, _ex_handled = true))
 
 #define catchWhen(targetId, varName, condition)                                                       \
-for (Exception const unused *varName = _ex_thrownException();                                         \
+for (Exception const unused *const varName = _ex_thrownException();                                   \
      !_ex_handled && _ex_thrownException() != NULL && varName->id == targetId && (condition);         \
-     _ex_handled = true, _ex_cleanup(&_ex_cleanedUp, _ex_handled))
+     _ex_cleanup(&_ex_cleanedUp, _ex_handled = true))
 
 // Catches any exception in a local variable limited to the scope of the catchAll block.
 #define catchAll(varName)                                                                             \
-for (Exception const unused *varName = _ex_thrownException();                                         \
+for (Exception const unused *const varName = _ex_thrownException();                                   \
      !_ex_handled && _ex_thrownException() != NULL;                                                   \
-     _ex_handled = true, _ex_cleanup(&_ex_cleanedUp, _ex_handled))
+     _ex_cleanup(&_ex_cleanedUp, _ex_handled = true))
 
 #define catchAllWhen(varName, condition)                                                              \
-for (Exception const unused *varName = _ex_thrownException();                                         \
+for (Exception const unused *const varName = _ex_thrownException();                                   \
      !_ex_handled && _ex_thrownException() != NULL && (condition);                                    \
-     _ex_handled = true, _ex_cleanup(&_ex_cleanedUp, _ex_handled))
+     _ex_cleanup(&_ex_cleanedUp, _ex_handled = true))
 
 // Rethrow an exception to the caller.
 #define rethrow do                                                                                    \
@@ -127,6 +124,6 @@ for (Exception const unused *varName = _ex_thrownException();                   
 // Often used for cleanup. Will only be executed once.
 // It is optional.
 #define finally                                                                                       \
-for(bool _ex_finallyExecuted = false; !_ex_finallyExecuted; _ex_finallyExecuted = true, _ex_cleanup(&_ex_cleanedUp, _ex_handled))
+for (bool _ex_finallyExecuted = false; !_ex_finallyExecuted; _ex_finallyExecuted = true, _ex_cleanup(&_ex_cleanedUp, _ex_handled))
 
 #endif // EXCEPTIONS_H_INCLUDED
